@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.lorebas.todosimple.models.Task;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Repository
