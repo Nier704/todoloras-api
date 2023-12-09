@@ -1,5 +1,8 @@
 package com.lorebas.todosimple.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -8,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -22,24 +26,25 @@ public class User {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
-   @Column(name = "id", unique = true)
+   @Column(name = "user_id", unique = true)
    private Long id;
    
-   @Column(name = "username", length = 100, nullable = false, unique = true)
+   @Column(name = "user_name", length = 100, nullable = false, unique = true)
    @NotNull(groups = {CreateUser.class, UpdateUser.class})
    @NotEmpty(groups = {CreateUser.class, UpdateUser.class})
    @Size(groups = {CreateUser.class, UpdateUser.class}, min = 2, max = 100)
    private String username;
 
    @JsonProperty(access = Access.WRITE_ONLY)
-   @Column(name = "password", length = 12, nullable = false)
+   @Column(name = "user_password", length = 12, nullable = false)
    @NotNull(groups = {CreateUser.class, UpdateUser.class})
    @NotEmpty(groups = {CreateUser.class, UpdateUser.class})
    @Size(groups = {CreateUser.class, UpdateUser.class}, min = 4, max = 12)
    private String password;
 
-   //private List<Task> tasks = new ArrayList<Task>();
-
+   @OneToMany(mappedBy = "user")  // Um usuario pode ter muitas tasks // o "user" eh o nome da variavel -
+                                  // que armazenamos o User no Task.java
+   private List<Task> tasks = new ArrayList<Task>();
 
    public User(){
 
@@ -50,6 +55,13 @@ public class User {
       this.password = password;
    }
 
+   public List<Task> getTasks() {
+      return this.tasks;
+   }
+
+   public void setTasks(List<Task> tasks) {
+      this.tasks = tasks;
+   }
 
    public Long getId() {
       return this.id;
